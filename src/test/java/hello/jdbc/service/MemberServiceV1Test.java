@@ -1,9 +1,7 @@
 package hello.jdbc.service;
 
-import hello.jdbc.connection.ConnectionConst;
 import hello.jdbc.domain.Member;
 import hello.jdbc.repository.MemberRepositoryV1;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +11,6 @@ import java.sql.SQLException;
 
 import static hello.jdbc.connection.ConnectionConst.*;
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *  기본 동작, 트랜잭션이 없어서 문제 발생
@@ -74,5 +71,26 @@ class MemberServiceV1Test {
         assertThat(findMemberB.getMoney()).isEqualTo(12000);
 
     }
+
+    @Test
+    @DisplayName("정상 이체 다른테스트1")
+    void accountTransfer2() throws SQLException {
+        //given
+        Member memberA = new Member(MEMBER_A, 10000);
+        Member memberB = new Member(MEMBER_B, 10000);
+        memberRepository.save(memberA);
+        memberRepository.save(memberB);
+
+        //when
+        memberService.accountTransfer(memberA.getMemberid(), memberB.getMemberid(), 2000);
+
+        //then
+        Member findMemberA = memberRepository.findById(memberA.getMemberid());
+        Member findMemberB = memberRepository.findById(memberB.getMemberid());
+        assertThat(findMemberA.getMoney()).isEqualTo(8000);
+        assertThat(findMemberB.getMoney()).isEqualTo(12000);
+
+    }
+
 
 }
