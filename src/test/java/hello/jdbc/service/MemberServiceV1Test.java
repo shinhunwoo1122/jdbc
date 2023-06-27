@@ -113,22 +113,16 @@ class MemberServiceV1Test {
     }
 
     @Test
-    @DisplayName("정상 이체 다른테스트1")
-    void accountTransfer4() throws SQLException {
-        //given
-        Member memberA = new Member(MEMBER_A, 10000);
-        Member memberB = new Member(MEMBER_B, 10000);
-        memberRepository.save(memberA);
-        memberRepository.save(memberB);
+    @DisplayName("숫자 테스트")
+    void numberTest() throws SQLException {
 
-        //when
-        memberService.accountTransfer(memberA.getMemberid(), memberB.getMemberid(), 2000);
+        int displaySize = 36;
 
-        //then
-        Member findMemberA = memberRepository.findById(memberA.getMemberid());
-        Member findMemberB = memberRepository.findById(memberB.getMemberid());
-        assertThat(findMemberA.getMoney()).isEqualTo(8000);
-        assertThat(findMemberB.getMoney()).isEqualTo(12000);
+       if(displaySize < 36 || displaySize > 1000){
+            System.out.println(" 비정상 = " + displaySize);
+        }else{
+            System.out.println(" 정상 = " + displaySize);
+        }
 
     }
 
