@@ -112,6 +112,8 @@ class MemberServiceV1Test {
 
     }
 
+
+
     @Test
     @DisplayName("숫자 테스트")
     void numberTest() throws SQLException {
