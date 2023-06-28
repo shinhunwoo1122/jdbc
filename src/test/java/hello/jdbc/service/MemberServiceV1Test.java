@@ -115,7 +115,7 @@ class MemberServiceV1Test {
 
 
     @Test
-    @DisplayName("숫자 테스트")
+    @DisplayName("숫자 테스트111")
     void numberTest() throws SQLException {
 
         int displaySize = 36;
