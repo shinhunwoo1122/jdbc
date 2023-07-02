@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.*;
 
 class MemberServiceV1Test {
 
+
     public static final String MEMBER_A = "memberA";
     public static final String MEMBER_B = "memberB";
     public static final String MEMBER_EX = "ex";
