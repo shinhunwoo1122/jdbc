@@ -135,6 +135,8 @@ public class MemberRepositoryV0 {
 
     }
 
+
+
     private static Connection getConnection() {
         return DBConnectionUtil.getConnection();
     }

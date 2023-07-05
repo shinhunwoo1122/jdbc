@@ -26,6 +26,8 @@ class MemberServiceV1Test {
     private MemberRepositoryV1 memberRepository;
     private MemberServiceV1 memberService;
 
+
+
     @BeforeEach
     void before(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource(URL, USERNAME, PASSWORD);
