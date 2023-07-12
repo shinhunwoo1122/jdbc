@@ -1,39 +1,45 @@
 package hello.jdbc.service;
 
 import hello.jdbc.domain.Member;
-import hello.jdbc.repository.MemberRepositoryV1;
+import hello.jdbc.repository.MemberRepositoryV2;
+import hello.jdbc.repository.MemberRepositoryV3;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import java.sql.SQLException;
 
 import static hello.jdbc.connection.ConnectionConst.*;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
- *  기본 동작, 트랜잭션이 없어서 문제 발생
+ *  트랜잭션 - 커넥션 파라미터 전달 방식 동기화
  */
-
-class MemberServiceV1Test {
+@Slf4j
+class MemberServiceV3_1Test {
 
 
     public static final String MEMBER_A = "memberA";
     public static final String MEMBER_B = "memberB";
     public static final String MEMBER_EX = "ex";
 
-    private MemberRepositoryV1 memberRepository;
-    private MemberServiceV1 memberService;
+    private MemberRepositoryV3 memberRepository;
+    private MemberServiceV3_1 memberService;
 
 
 
     @BeforeEach
     void before(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource(URL, USERNAME, PASSWORD);
-        memberRepository = new MemberRepositoryV1(dataSource);
-        memberService = new MemberServiceV1(memberRepository);
+        memberRepository = new MemberRepositoryV3(dataSource);
+        PlatformTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
+        memberService = new MemberServiceV3_1(transactionManager, memberRepository);
     }
 
     @AfterEach
@@ -53,7 +59,9 @@ class MemberServiceV1Test {
         memberRepository.save(memberB);
 
         //when
+        log.info("START TX");
         memberService.accountTransfer(memberA.getMemberid(), memberB.getMemberid(), 2000);
+        log.info("END TX");
 
         //then
         Member findMemberA = memberRepository.findById(memberA.getMemberid());
@@ -79,7 +87,9 @@ class MemberServiceV1Test {
         //then
         Member findMemberA = memberRepository.findById(memberA.getMemberid());
         Member findMemberB = memberRepository.findById(memberEx.getMemberid());
-        assertThat(findMemberA.getMoney()).isEqualTo(8000);
+        System.out.println(findMemberA.getMoney());
+        System.out.println(findMemberB.getMoney());
+        assertThat(findMemberA.getMoney()).isEqualTo(10000);
         assertThat(findMemberB.getMoney()).isEqualTo(10000);
 
     }
